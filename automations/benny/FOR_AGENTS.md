@@ -2,11 +2,11 @@
 
 ## what i want to automate
 
-i want two cursor automations that work together in one slack issue channel.
+i want two claude code routines that work together in one slack issue channel.
 
 ### automation 1: triage issue reports
 
-- trigger: when someone posts a new top-level report in my configured source slack channel, i want this automation to start on that report and keep its original thread coordinates.
+- trigger: when someone posts a new top-level report in my configured source slack channel, i want this routine to pick up that report, either on its hourly poll or from a relay that fires its api trigger, and keep the report's original thread coordinates.
 - behavior: i want it to read the thread and attachments, classify the report as a bug or performance issue, feature request, question or feedback, or reroute, and trace the likely owning layer before routing.
 - tracker: i want it to search my configured tracker for duplicates, update a confident duplicate, and create a ticket only for a clear net-new bug.
 - tools: i want slack thread read and reply access, my configured tracker integration, and my optional routing map.
@@ -29,7 +29,7 @@ i want two cursor automations that work together in one slack issue channel.
 - i treat utility and debug bots as evidence, not delegation or fix ownership.
 - i allow subagents to help, but they cannot post to slack or receive slack credentials.
 - i want this entire pack committed at `.claude/automations/benny/` in the target repository. its `SKILL.md` files are direct automation instructions, not registered plugin skills.
-- i want pstack enabled through the target repository's committed `.cursor/settings.json` only for shared dependencies such as `how`, `why`, `tdd`, `unslop`, and the required principle skills.
+- i want pstack enabled through the target repository's committed `.claude/settings.json` only for shared dependencies such as `how`, `why`, `tdd`, `unslop`, and the required principle skills.
 - i want each live automation prompt to read its committed operational file directly. i do not want plugin cache paths, copied excerpts, or slash-skill discovery.
 - i keep user-owned configuration, feature maps, routing maps, and secrets outside `.claude/automations/benny/` so pack refreshes cannot overwrite them.
 - i want both automations to fail closed when channel coordinates, tracker access, the control adapter, or the feature map are missing or uncertain.
@@ -54,7 +54,7 @@ start from [`configuration.example.yaml`](./templates/configuration.example.yaml
 
 ## for the agent
 
-the human enters setup by pointing cursor at this file. do not look for or invoke a discovered benny slash skill.
+the human enters setup by pointing claude code at this file. do not look for or invoke a discovered benny slash skill.
 
 1. ask which repository will run the automations.
 2. treat the directory containing this `FOR_AGENTS.md` as the source pack.
@@ -64,26 +64,27 @@ the human enters setup by pointing cursor at this file. do not look for or invok
 6. verify that the copied `FOR_AGENTS.md` and `skills/setup-benny/SKILL.md` exist in the target repository.
 7. read and follow `.claude/automations/benny/skills/setup-benny/SKILL.md` directly from the target repository.
 
-i want you to merge this entry into the target repository's `.cursor/settings.json`:
+i want you to merge this entry into the target repository's `.claude/settings.json`:
 
 ```json
 {
-	"plugins": {
-		"pstack": { "enabled": true }
-	}
+	"extraKnownMarketplaces": {
+		"pstack-claude": { "source": { "source": "github", "repo": "max-kharena/pstack-claude" } }
+	},
+	"enabledPlugins": { "pstack@pstack-claude": true }
 }
 ```
 
-preserve every unrelated setting and plugin. preserve comments and valid jsonc syntax when the existing file uses jsonc.
+preserve every unrelated setting, marketplace, and plugin.
 
 i want verification from a fresh agent rooted in the target repository. confirm that pstack's `how`, `why`, `tdd`, `unslop`, and the principle skills used by benny resolve in project scope. do not count skills loaded from the current session or a user-scoped install.
 
 if project-scoped plugins are unavailable or any shared dependency does not resolve, stop and explain what failed. do not add `.claude/automations/benny/skills/` to a plugin manifest or expect its files to appear in the slash-skill list.
 
-tell me that `.cursor/settings.json`, `.claude/automations/benny/`, and any referenced secret-free configuration must be committed before either automation is enabled. do not create or update an automation until i explicitly ask.
+tell me that `.claude/settings.json`, `.claude/automations/benny/`, and any referenced secret-free configuration must be committed before either automation is enabled. do not create or update an automation until i explicitly ask.
 
-for first-time creation, use built-in `/automate` once for triage and once for repro and fix. complete the draft review, approval, readiness check, and Automations editor handoff for the first automation before starting the second.
+for first-time creation, create one routine at a time with `/schedule`, or on the routines page at `https://claude.ai/code/routines` when i choose the api trigger, since only the web can mint its token. finish the draft review, my approval, and the thread-safety test for the first routine before starting the second.
 
-paraphrase this intent and the finished configuration into each draft. the triage prompt must read and follow `.claude/automations/benny/skills/triage-issue-reports/SKILL.md`. the repro prompt must read and follow `.claude/automations/benny/skills/reproduce-and-fix-issues/SKILL.md`. use these repo-relative paths only after `/automate` confirms they are committed in the repository where the automation will run.
+paraphrase this intent and the finished configuration into each routine's saved prompt. the triage prompt must read and follow `.claude/automations/benny/skills/triage-issue-reports/SKILL.md`. the repro prompt must read and follow `.claude/automations/benny/skills/reproduce-and-fix-issues/SKILL.md`. use these repo-relative paths only after `git` shows they are committed on the default branch the routine clones.
 
-for existing automations, do not use `/automate` to inspect or update them. validate the configuration, then use the concise field checklist in the copied setup file so i can edit each automation directly in its editor. do not create duplicates.
+for existing routines, update them with `/schedule update` or give me the field checklist from the copied setup file for the routine's edit page. do not create duplicates.
