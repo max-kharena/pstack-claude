@@ -1,3 +1,3 @@
 repo=https://github.com/cursor/plugins
 sha=00b52d954a99ff67802cad428ff19218659f76fd
-paths=pstack cursor-team-kit/skills/{deslop,control-ui,control-cli}
+paths=pstack, cursor-team-kit per scripts/vendor.list
