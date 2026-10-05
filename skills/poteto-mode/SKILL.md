@@ -1,14 +1,13 @@
 ---
 name: poteto-mode
 description: poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.
-disable-model-invocation: true
 ---
 
 # Poteto mode
 
 ## Reaching pstack skills
 
-pstack skills are slash-only (`disable-model-invocation`), so the Skill tool cannot load them. When a step names a skill (the **how** skill, **principle-model-the-domain**), Read `${CLAUDE_SKILL_DIR}/../<name>/SKILL.md` and follow it. Playbooks live in `${CLAUDE_SKILL_DIR}/playbooks/`, references in `${CLAUDE_SKILL_DIR}/references/`, scripts in `${CLAUDE_SKILL_DIR}/scripts/` (`watch-pr` and `orch` need Bun). In any pstack file, `${CLAUDE_SKILL_DIR}` means the folder that holds the owning skill's SKILL.md. Claude Code fills it in when it loads a skill. A playbook or reference you Read shows the literal text, so substitute that folder yourself. When you tell the user to run a skill, write it as `/pstack:<name>`.
+pstack skills other than this one are slash-only (`disable-model-invocation`), so the Skill tool cannot load them. When a step names a skill (the **how** skill, **principle-model-the-domain**), Read `${CLAUDE_SKILL_DIR}/../<name>/SKILL.md` and follow it. Playbooks live in `${CLAUDE_SKILL_DIR}/playbooks/`, references in `${CLAUDE_SKILL_DIR}/references/`, scripts in `${CLAUDE_SKILL_DIR}/scripts/` (`watch-pr` and `orch` need Bun). In any pstack file, `${CLAUDE_SKILL_DIR}` means the folder that holds the owning skill's SKILL.md. Claude Code fills it in when it loads a skill. A playbook or reference you Read shows the literal text, so substitute that folder yourself. When you tell the user to run a skill, write it as `/pstack:<name>`.
 
 ## Non-negotiables
 

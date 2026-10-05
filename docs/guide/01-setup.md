@@ -60,6 +60,6 @@ Pick something real but small, and describe it the way you'd describe it to a co
 
 Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt. If `/poteto-mode` skips a step, the step stays in the list with `skip: <reason>`, so you can see what it chose not to do.
 
-From here you can type normal follow-ups. To keep `/poteto-mode` on for the whole session, run `/output-style poteto`. The [output style](https://code.claude.com/docs/en/output-styles) stays in context on every turn, applies poteto-mode when a playbook matches or a task needs rigor, and stays out of casual turns. `/output-style default` turns it off. To run a whole session as the poteto agent instead, start it with `claude --agent pstack:poteto-agent`. A plain `/poteto-mode` attaches the skill to one task, and it fades as the session moves on.
+From here you can type normal follow-ups. To keep `/poteto-mode` on for the whole session, run `/output-style pstack:poteto`. The [output style](https://code.claude.com/docs/en/output-styles) stays in context on every turn, applies poteto-mode when a playbook matches or a task needs rigor, and stays out of casual turns. `/output-style default` turns it off. To run a whole session as the poteto agent instead, start it with `claude --agent pstack:poteto-agent`. A plain `/poteto-mode` attaches the skill to one task, and it fades as the session moves on.
 
 Next: [Route work through `/poteto-mode`](./02-poteto-mode.md).

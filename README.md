@@ -44,7 +44,7 @@ Out of the box, code delegates (feature, refactoring, bug fix, perf, hillclimb) 
 | You want | Do this |
 |---|---|
 | Rigor for one task | `/pstack:poteto-mode <task>` |
-| Rigor whenever a task needs it, for the whole session | `/output-style poteto`. `/output-style default` turns it off. |
+| Rigor whenever a task needs it, for the whole session | `/output-style pstack:poteto`. `/output-style default` turns it off. |
 | The whole session to run as the poteto agent | `claude --agent pstack:poteto-agent` |
 
 The output style replaces Cursor's custom modes. It stays in context every turn, applies poteto-mode when a playbook matches or a task needs rigor, and stays out of casual turns. `/loop` works with all three for long runs.

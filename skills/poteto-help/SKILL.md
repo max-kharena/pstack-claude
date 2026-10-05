@@ -7,7 +7,7 @@ description: Guides users through pstack setup, /poteto-mode, and picking the sk
 
 Answer the user's question about pstack, hand them a prompt they can send, and link the file the answer came from. For a help question, don't start the work. The user asked how, and a pstack run spends real tokens, so let them send the prompt.
 
-A message that asks for work, such as "use pstack to fix this bug", is not a help question. Read [`poteto-mode`](../poteto-mode/SKILL.md), do the work under it, and mention once that the `poteto` output style keeps it on.
+A message that asks for work, such as "use pstack to fix this bug", is not a help question. Read [`poteto-mode`](../poteto-mode/SKILL.md), do the work under it, and mention once that the `pstack:poteto` output style keeps it on.
 
 This file maps questions to the skills and guide pages that hold the answers. Those files own the details. Read the file you route to before you quote it, and trust it when it disagrees with this map. The links here point into the installed plugin, which the user may not be able to open, so give the user the file's public copy: `https://github.com/max-kharena/pstack-claude/blob/main/` followed by its path. pstack skills are slash-only, so read a routed skill as the file `../<name>/SKILL.md` next to this one, and name it to the user as `/pstack:<name>`.
 
@@ -32,7 +32,7 @@ Check the state that changes the answer, and mention it only when it does:
 2. Run [`/pstack:setup-pstack`](../setup-pstack/SKILL.md). It asks for a budget, maps a model to each role, and writes a user rule. The rule applies to new sessions.
 3. Start a real task with `/poteto-mode`, a goal, and a check that can pass or fail.
 
-Installing changes nothing until the user invokes a skill. Only `/pstack:setup-pstack` and `/pstack:poteto-help` load from the user's words. Every pstack skill also answers to its bare name, such as `/poteto-mode`, when no other plugin uses that name. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them.
+Installing changes nothing until the user invokes a skill. Only `/pstack:setup-pstack`, `/pstack:poteto-help`, and `/pstack:poteto-mode` (when the user asks for poteto's style, or the `pstack:poteto` output style is on) load from the user's words. Every pstack skill also answers to its bare name, such as `/poteto-mode`, when no other plugin uses that name. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them.
 
 If cost is the worry, say where the tokens go and how to spend fewer. pstack spends extra tokens on subagents and review panels. Rerun `/pstack:setup-pstack` and pick a smaller budget or cheaper models. A role set to `inherit` runs on the session's model, which saves tokens when the session runs on a cheaper model. A shorter panel list runs fewer subagents, one for each entry. Save `/poteto-mode` for work that needs rigor.
 
@@ -45,7 +45,7 @@ This is the Claude Code port of pstack, which upstream is built for Cursor. Its 
 Whether `/poteto-mode` stays on depends on how the user starts it:
 
 - `/pstack:poteto-mode <task>` attaches the skill to that task. It fades as the session moves on.
-- `/output-style poteto` (or `"outputStyle": "poteto"` in settings) keeps it on every turn. It applies itself when a playbook matches or a task needs rigor, and stays out of casual turns. `/output-style default` turns it off.
+- `/output-style pstack:poteto` (or `"outputStyle": "pstack:poteto"` in settings) keeps it on every turn. It applies itself when a playbook matches or a task needs rigor, and stays out of casual turns. `/output-style default` turns it off.
 - `claude --agent pstack:poteto-agent` runs the whole session as the poteto agent.
 
 Link [Claude Code's output style docs](https://code.claude.com/docs/en/output-styles) when this comes up. Mid-chat, "new task" makes the mode match a fresh playbook. `/poteto-mode` already uses `pstack:poteto-agent` for the subagents its playbook steps spawn. To get the same style from a subagent of your own, spawn it with `subagent_type: "pstack:poteto-agent"`.
@@ -124,11 +124,11 @@ Principles are one-rule skills that `/poteto-mode` reads and cites in its replie
 
 | Symptom | Fix |
 |---|---|
-| The mode stopped applying after a few turns | It was started for one task. Switch on `/output-style poteto`, or start each task with `/poteto-mode`. |
+| The mode stopped applying after a few turns | It was started for one task. Switch on `/output-style pstack:poteto`, or start each task with `/poteto-mode`. |
 | A question got treated as the next step of the last task | Say "new task", or say the turn doesn't need the mode. |
 | A new model choice had no effect | The rule from `/setup-pstack` loads at session start. Start a new session. |
 | Runs cost more than expected | See the cost paragraph under Get set up. |
-| A skill didn't load on its own | Only `/setup-pstack` and `/poteto-help` load from the user's words. The others load when the user types them or when `/poteto-mode` runs them, and it doesn't run every skill. |
+| A skill didn't load on its own | Only `/setup-pstack`, `/poteto-help`, and `/poteto-mode` load from the user's words. The others load when the user types them or when `/poteto-mode` runs them, and it doesn't run every skill. |
 | Parallel agents overwrote each other | Spawn each with `isolation: "worktree"`, or `isolation: "remote"` where available, which gives each its own machine. |
 | An overnight run moved but finished nothing | `/loop` needs a check that can pass or fail, not a duration. See [guide page 7](../../docs/guide/07-overnight.md). |
 | The reply claims success from a green build | Ask for the real command, flow, stored value, or profile. That's the prove-it-works principle. |
