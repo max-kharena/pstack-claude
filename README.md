@@ -37,14 +37,58 @@ Upstream pstack is a Cursor plugin. This repository repackages it as a Claude Co
 
 ## install
 
+pstack installs like any Claude Code plugin. This repository is its own marketplace, so you add the marketplace once and then install the plugin from it. Requirements: Claude Code 2.1 or later, `git`, and `gh`. The `watch-pr` and `orch` scripts that some playbooks run also need [Bun](https://bun.sh).
+
+### In a Claude Code session
+
+Works in the terminal and in JetBrains IDEs, which run Claude Code in their terminal.
+
 ```text
 /plugin marketplace add max-kharena/pstack-claude
 /plugin install pstack@pstack-claude
 ```
 
-Restart the session so the skills load. Every skill answers to `/pstack:<name>`, and to its bare name, such as `/poteto-mode`, when no other plugin uses that name.
+`/plugin install` opens the plugin's details so you can see what it adds and choose a [scope](#pick-a-scope). On Claude Code 2.1.275 or later, one command does both steps: `/plugin install pstack --marketplace max-kharena/pstack-claude`. To browse instead, run `/plugin` and open the **Discover** tab.
 
-To turn pstack on for everyone in a repository, commit this to its `.claude/settings.json`:
+The install summary tells you whether pstack is active now. If it says `Run /reload-plugins to activate`, do that, or start a new session. Then type `/pstack:` to see the skills. Every skill answers to `/pstack:<name>`, and to its bare name, such as `/poteto-mode`, when no other plugin uses that name.
+
+### From your shell
+
+```bash
+claude plugin marketplace add max-kharena/pstack-claude
+claude plugin install pstack@pstack-claude
+```
+
+This installs at user scope. Add `--scope project` or `--scope local` to change that. The plugin loads in your next session, or after `/reload-plugins` in one that's already open. `claude plugin list` confirms it.
+
+### Desktop app
+
+The desktop app's Code tab reads the same settings as the terminal, so add the marketplace once, either in a session or from your shell as above. Then click **+** next to the prompt box, choose **Plugins**, then **Add plugin**, select **pstack**, and choose a scope. Manage it later under **+ > Plugins > Manage plugins**. The plugin browser isn't available in the desktop app's cloud sessions.
+
+### VS Code
+
+In the Claude Code panel, type `/plugins` to open **Manage plugins**. Add `max-kharena/pstack-claude` on the **Marketplaces** tab, then install **pstack** from the **Plugins** tab and choose a scope. Changes apply to open sessions without a restart.
+
+### Pick a scope
+
+| Scope | Who gets pstack | Where it's recorded |
+|---|---|---|
+| User (default) | You, in every project on this machine | `~/.claude/settings.json` |
+| Project | Everyone who works in this repository | `.claude/settings.json`, which you commit |
+| Local | You, in this repository only | `.claude/settings.local.json` |
+
+A plugin installed at user scope in the terminal, the desktop app, or VS Code is available in the other two on the same machine.
+
+### Turn it on for a team
+
+In the repository, declare the marketplace and enable pstack at project scope, then commit `.claude/settings.json`:
+
+```bash
+claude plugin marketplace add max-kharena/pstack-claude --scope project
+claude plugin install pstack@pstack-claude --scope project
+```
+
+That writes this to `.claude/settings.json`:
 
 ```json
 {
@@ -55,7 +99,56 @@ To turn pstack on for everyone in a repository, commit this to its `.claude/sett
 }
 ```
 
-Requirements: Claude Code 2.1 or later, `git`, and `gh`. The `watch-pr` and `orch` scripts some playbooks run need [Bun](https://bun.sh).
+Committing it turns pstack on for the repository but doesn't download it to anyone's machine. Each teammate runs `claude plugin install pstack@pstack-claude --scope project` once, and Claude Code reminds anyone who hasn't.
+
+### Cloud sessions, projects, and routines
+
+Cloud sessions, including Claude Code on the web at claude.ai/code, don't load plugins from your machine or from a repository's `.claude/settings.json`.
+
+- **[Claude Code projects](https://code.claude.com/docs/en/claude-projects):** add pstack under **Project settings > Plugins** so every cloud thread has it.
+- **[Routines](https://code.claude.com/docs/en/routines):** a routine uses the skills committed to the repository it clones. The [benny setup](./automations/benny/skills/setup-benny/SKILL.md) shows how to check that and commit the skills a routine needs.
+
+### claude.ai and Cowork
+
+You can also add this GitHub marketplace in claude.ai under **Customize > Plugins**. pstack is built for Claude Code, though. claude.ai chat loads only its skills, without the agents or the output style, and Cowork loads the skills and agents. A plugin you turn on for your claude.ai account also syncs into Claude Code as `pstack@synced`, so install it one way, not both.
+
+### Keep it updated
+
+Auto-update is off by default for third-party marketplaces like this one. To turn it on, run `/plugin`, open the **Marketplaces** tab, select **pstack-claude**, and choose **Enable auto-update**. To update right away:
+
+```bash
+claude plugin update pstack@pstack-claude
+```
+
+Every release raises the version in `.claude-plugin/plugin.json`, so an update always finds the new copy. A running session keeps the version it loaded until `/reload-plugins` or the next session.
+
+### Check, disable, or remove
+
+| You want to | Run |
+|---|---|
+| See it installed, with its version and scope | `claude plugin list` |
+| See what it adds and its token cost | `claude plugin details pstack@pstack-claude` |
+| Turn it off without uninstalling | `claude plugin disable pstack@pstack-claude` |
+| Turn it back on | `claude plugin enable pstack@pstack-claude` |
+| Uninstall it | `claude plugin uninstall pstack@pstack-claude` |
+| Remove the marketplace, which also uninstalls pstack | `claude plugin marketplace remove pstack-claude` |
+
+`claude plugin details` counts every skill's description toward its always-on estimate. Only the skills Claude can load on its own (`poteto-mode`, `setup-pstack`, `babysit`, and the vendored team-kit helpers other than the thermo-nuclear review) and the four agents actually reach Claude's context, so the real always-on cost is lower.
+
+`claude plugin uninstall` acts on user scope unless you pass `--scope project` or `--scope local`. `claude plugin marketplace remove` without `--scope` removes the marketplace from every scope, so pass `--scope` when you mean only one.
+
+### Try it without installing
+
+```bash
+git clone https://github.com/max-kharena/pstack-claude.git
+claude --plugin-dir ./pstack-claude
+```
+
+`--plugin-dir` loads the plugin for that one session.
+
+### Another port with the same name
+
+[michael-denyer/pstack-claude](https://github.com/michael-denyer/pstack-claude) is a separate port of pstack that also registers as marketplace `pstack-claude` with plugin `pstack`, so the two can't be added side by side. Remove one marketplace before you add the other.
 
 ## get started
 

@@ -11,9 +11,9 @@ In Claude Code, add the marketplace and install the plugin:
 /plugin install pstack@pstack-claude
 ```
 
-Claude Code confirms the plugin is installed. Restart the session so its skills load. Every pstack skill answers to `/pstack:<name>`, and to its bare name, such as `/poteto-mode`, when no other plugin uses that name.
+Claude Code confirms the plugin is installed and tells you whether it's active now. If it asks you to, run `/reload-plugins`. Every pstack skill answers to `/pstack:<name>`, and to its bare name, such as `/poteto-mode`, when no other plugin uses that name.
 
-To turn pstack on for everyone working in a repo, commit this to the repo's `.claude/settings.json`. Teammates get a prompt to install it when they trust the folder:
+To turn pstack on for everyone working in a repo, commit this to the repo's `.claude/settings.json`. Committing it enables pstack for the repo but doesn't download it, so each teammate runs `claude plugin install pstack@pstack-claude --scope project` once:
 
 ```json
 {
