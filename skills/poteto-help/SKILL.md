@@ -1,6 +1,7 @@
 ---
 name: poteto-help
-description: Guides users through pstack setup, /poteto-mode, and picking the skill, playbook, or principle for a task. Use for /poteto-help, or when the user asks how to install, set up, or use pstack, or which pstack skill fits. Not for requests to do work, even ones that name pstack.
+description: Guides users through pstack setup, /poteto-mode, and picking the skill, playbook, or principle for a task. Type /poteto-help with a question.
+disable-model-invocation: true
 ---
 
 # Poteto help
@@ -32,7 +33,7 @@ Check the state that changes the answer, and mention it only when it does:
 2. Run [`/pstack:setup-pstack`](../setup-pstack/SKILL.md). It asks for a budget, maps a model to each role, and writes a user rule. The rule applies to new sessions.
 3. Start a real task with `/poteto-mode`, a goal, and a check that can pass or fail.
 
-Installing changes nothing until the user invokes a skill. Only `/pstack:setup-pstack`, `/pstack:poteto-help`, and `/pstack:poteto-mode` (when the user asks for poteto's style, or the `pstack:poteto` output style is on) load from the user's words. Every pstack skill also answers to its bare name, such as `/poteto-mode`, when no other plugin uses that name. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them.
+Installing changes nothing until the user invokes a skill. Only `/pstack:setup-pstack`, and `/pstack:poteto-mode` when the user asks for poteto's style or the `pstack:poteto` output style is on, load from the user's words. Every pstack skill also answers to its bare name, such as `/poteto-mode`, when no other plugin uses that name. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them.
 
 If cost is the worry, say where the tokens go and how to spend fewer. pstack spends extra tokens on subagents and review panels. Rerun `/pstack:setup-pstack` and pick a smaller budget or cheaper models. A role set to `inherit` runs on the session's model, which saves tokens when the session runs on a cheaper model. A shorter panel list runs fewer subagents, one for each entry. Save `/poteto-mode` for work that needs rigor.
 
@@ -128,7 +129,7 @@ Principles are one-rule skills that `/poteto-mode` reads and cites in its replie
 | A question got treated as the next step of the last task | Say "new task", or say the turn doesn't need the mode. |
 | A new model choice had no effect | The rule from `/setup-pstack` loads at session start. Start a new session. |
 | Runs cost more than expected | See the cost paragraph under Get set up. |
-| A skill didn't load on its own | Only `/setup-pstack`, `/poteto-help`, and `/poteto-mode` load from the user's words. The others load when the user types them or when `/poteto-mode` runs them, and it doesn't run every skill. |
+| A skill didn't load on its own | Only `/setup-pstack` and `/poteto-mode` load from the user's words. The others load when the user types them or when `/poteto-mode` runs them, and it doesn't run every skill. |
 | Parallel agents overwrote each other | Spawn each with `isolation: "worktree"`, or `isolation: "remote"` where available, which gives each its own machine. |
 | An overnight run moved but finished nothing | `/loop` needs a check that can pass or fail, not a duration. See [guide page 7](../../docs/guide/07-overnight.md). |
 | The reply claims success from a green build | Ask for the real command, flow, stored value, or profile. That's the prove-it-works principle. |

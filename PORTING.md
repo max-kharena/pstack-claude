@@ -1,6 +1,6 @@
 # Porting pstack from Cursor to Claude Code
 
-This file records how upstream pstack ([cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack), commit `4e5b1cf`, pstack 0.15.10) maps onto Claude Code, why each judgment call went the way it did, and what was verified. `.upstream/SOURCE` holds the exact upstream commit the port tracks.
+This file records how upstream pstack ([cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack), commit `00b52d9`, pstack 0.15.11) maps onto Claude Code, why each judgment call went the way it did, and what was verified. `.upstream/SOURCE` holds the exact upstream commit the port tracks.
 
 ## Why a separate repository
 
@@ -95,7 +95,7 @@ Run on Claude Code 2.1.267, macOS.
 | `scripts/lint-port.sh` (no Cursor-only construct left in shipped files) | pass |
 | `scripts/check-refs.py` (every link, skill name, and `subagent_type` resolves; 188 skill-to-skill edges) | pass |
 | Install from the marketplace at local scope, then `claude plugin details` | 54 skills, 3 agents |
-| Model context in a fresh session | 6 pstack skills listed (poteto-mode, poteto-help, setup-pstack, deslop, control-cli, control-ui). The other 48 stay slash-only as upstream. 3 agents spawnable |
+| Model context in a fresh session | 5 pstack skills listed (control-cli, control-ui, deslop, poteto-mode, setup-pstack). The rest stay slash-only as upstream. 3 agents spawnable |
 | Probe plugin | `${CLAUDE_SKILL_DIR}`, `${CLAUDE_SESSION_ID}`, `${CLAUDE_PLUGIN_ROOT}` substitute in skills; `${CLAUDE_PLUGIN_ROOT}` substitutes in agents; output styles need the `plugin:style` name and get no substitution |
 | `pstack:poteto-agent` spawn | read `skills/poteto-mode/SKILL.md` through `${CLAUDE_PLUGIN_ROOT}` |
 | `pstack:reader` spawn | no Edit, Write, NotebookEdit, or Agent; Bash and MCP present |

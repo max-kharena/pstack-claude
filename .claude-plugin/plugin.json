@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
 	"name": "pstack",
-	"version": "0.15.10-claude.1",
+	"version": "0.15.11-claude.1",
 	"description": "if you want to go fast, go deep first. poteto's pstack for Claude Code: rigorous agent workflows, 24 principles, and multi-model review you can parallelize with confidence.",
 	"author": {
 		"name": "Lauren Tan (poteto)",
