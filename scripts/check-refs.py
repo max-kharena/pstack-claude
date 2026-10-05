@@ -22,6 +22,7 @@ BUILTIN_AGENTS = {"general-purpose", "Explore", "Plan"}
 EXTERNAL = {
     "loop", "schedule", "routines", "output-style", "plugin", "effort", "config", "clear", "resume",
     "skill-creator", "web-setup", "agents", "add-dir", "help", "model", "verify",
+    "reload-plugins", "plugins",
 }
 # Backticked tokens that look like slash commands but are paths, endpoints, or
 # a deliberate "this is not a skill" note (poteto-help on /orchestrate).
