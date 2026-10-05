@@ -20,7 +20,7 @@ Open a todo list with one entry per phase before starting.
 
 ## Phase A: Ground the problem
 
-Build a real mental model of every system the new code touches. Run the **how** skill over the relevant subsystems.
+Build a real mental model of every system the new code touches. Run the **how** skill (`${CLAUDE_SKILL_DIR}/../how/SKILL.md`) over the relevant subsystems.
 
 Naming a file isn't grounding. Produce the traced model `how` prescribes. If the design redefines ownership or layering, also run the **why** skill on the existing shape so the rationale becomes a constraint, not a guess.
 
@@ -28,9 +28,9 @@ Skip Phase A only when the work is genuinely greenfield with no surrounding syst
 
 ## Phase B: Sketch
 
-Run the **arena** skill with the design-sketch task and the Phase A grounding artifacts. Pass `references/runner-prompt.md` as each runner's prompt. Each candidate produces a design package shaped per `references/rationale-template.md`.
+Run the **arena** skill (`${CLAUDE_SKILL_DIR}/../arena/SKILL.md`) with the design-sketch task and the Phase A grounding artifacts. Pass `references/runner-prompt.md` as each runner's prompt. Each candidate produces a design package shaped per `references/rationale-template.md`.
 
-Take the runners from the `architect runners` line in the `pstack-models.md` rule, in place of the `arena runners` line. If the rule or that line is missing, use `claude-opus-5-5-max`, `gpt-5.6-sol-max`, `grok-4.7-xhigh-fast`. Alias and rejected entries follow the runner rules in the **arena** skill's Phase A.
+Take the runners from the `architect runners` line in the `~/.claude/rules/pstack-models.md` rule, in place of the `arena runners` line. If the rule or that line is missing, use `opus`, `sonnet`, `fable`. `inherit`, `cli:`, and rejected entries follow the runner rules in the **arena** skill's Phase A.
 
 Design it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. This is the **exhaust-the-design-space** principle skill made concrete. Whole-shape alternatives, not point fixes inside one shape.
 

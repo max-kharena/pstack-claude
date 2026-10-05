@@ -37,16 +37,15 @@ Launch all reviewers in a single message using the Agent tool. Use the `interrog
 
 | Subagent | Default model |
 |----------|---------------|
-| Reviewer A | `claude-opus-5-5-max` |
-| Reviewer B | `gpt-5.6-sol-max` |
-| Reviewer C | `grok-4.7-xhigh-fast` |
+| Reviewer A | `opus` |
+| Reviewer B | `sonnet` |
+| Reviewer C | `fable` |
 
 For each reviewer:
-- `subagent_type`: `general-purpose`
-- `model`: the configured `interrogate reviewers` entry, or the table default with no configured line. For an `auto` or `inherit-parent` entry, omit `model` so that reviewer runs on the parent model.
-- `readonly`: `true`
+- `subagent_type`: `pstack:reader`
+- `model`: the configured `interrogate reviewers` entry, or the table default with no configured line. For an `inherit` entry, omit `model` so that reviewer runs on the session model. A `cli:` entry runs as an external CLI seat, the only way to put a non-Claude model on the panel.
 
-If the Agent tool rejects a configured entry, run that reviewer on the table default of its family and say so. Families go by prefix: `claude-*`, `gpt-*`, and `grok-*`. With no family match, use Reviewer A's default. If it rejects a table default, check the valid slugs in the Agent tool's error message, pick the closest equivalent (prefer the highest-reasoning tier of the same family), spawn with it, and open a separate PR to update the default table. Do not block the review on the slug issue. Never treat an alias entry as a rejected slug or apply either fallback to it.
+Resolve entries and handle a rejected model per `${CLAUDE_SKILL_DIR}/../setup-pstack/references/model-routing.md`. Do not block the review on a model issue. Never treat `inherit` or a `cli:` entry as a rejected model.
 
 Read `references/reviewer-prompt.md` and fill in the template with:
 1. The stated intent

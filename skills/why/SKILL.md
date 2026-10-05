@@ -10,7 +10,7 @@ Investigate the motivation and intent behind code.
 
 Companion to the `how` skill. `how` answers what the code does and how it works. `why` answers what forces led to its shape.
 
-Each spawn below names a role line in the `pstack-models.md` rule and a default. Set `model` to that line's value, or to the default if the rule or the line is missing. Leave `model` unset when the value is `auto` or `inherit-parent`. If the Agent tool rejects a slug, use the default and say so. If it rejects the default, use the closest valid slug of the same family from its error message.
+Each spawn below names a role line in the `~/.claude/rules/pstack-models.md` rule and a default. Resolve it per `${CLAUDE_SKILL_DIR}/../setup-pstack/references/model-routing.md`: the line's value, or the default if the rule or the line is missing. Omit `model` for `inherit`. If the Agent tool rejects a model, step down a tier and say so.
 
 ## Operating Posture
 
@@ -61,7 +61,7 @@ Capture this as seed context (file paths, symbols, commits, PR numbers, linked t
 
 ### Discovery
 
-Before spawning investigators, list the available MCPs from the Cursor environment. Use the available-tools map when present. Otherwise inspect the `mcps/` directory Cursor exposes for enabled MCP servers.
+Before spawning investigators, list the available MCP servers. Claude Code names MCP tools `mcp__<server>__<tool>`, and deferred ones appear by name in the session's deferred-tools list. Group the tool names by server, and load a server's schemas with ToolSearch when its purpose is unclear. Plugin- and project-provided servers count.
 
 Map each available MCP to one evidence category:
 
@@ -80,9 +80,8 @@ Aim for a complete **coverage map**, not a minimal one. Document the null, don't
 Launch all matching investigators in a single message so they run concurrently. Don't ask one agent to cover multiple MCPs.
 
 Subagent config (each):
-- `subagent_type`: `general-purpose`
-- `model`: the `why investigators` line, default `grok-4.7-xhigh-fast`
-- `readonly`: `false` (agent mode). **Do not use readonly/Ask mode.** It strips MCP access, which disables MCP-backed investigators entirely. Investigators still shouldn't write anything.
+- `subagent_type`: `pstack:reader`. It keeps MCP access, which MCP-backed investigators need, and cannot edit files. Investigators still shouldn't write anything through MCP either.
+- `model`: the `why investigators` line, default `sonnet`
 
 Each investigator gets:
 1. The base prompt from `references/investigator-prompt.md`
@@ -124,9 +123,8 @@ If your scope assessment suggests a single-commit trivial target where the PR de
 
 Spawn one synthesizer subagent:
 
-- `subagent_type`: `general-purpose`
-- `model`: the `why synthesizer` line, default `claude-opus-5-5-max`
-- `readonly`: `false` (agent mode). The synthesizer's quality check spot-verifies citations, which can require MCP access. Readonly/Ask mode strips MCPs and defeats that.
+- `subagent_type`: `pstack:reader`. The synthesizer's quality check spot-verifies citations, which can require MCP access, and the reader keeps it.
+- `model`: the `why synthesizer` line, default `opus`
 
 The synthesizer gets:
 1. The investigator findings, including any null results and any categories skipped with justification

@@ -13,13 +13,13 @@ Use local browser automation to verify UI behavior with evidence. First reuse th
 - Verifying visual or accessibility changes with screenshots and snapshots.
 - Checking local web, IDE, or Electron behavior before shipping.
 - Capturing console logs, network logs, CPU profiles, traces, or heap snapshots.
-- Creating before/after evidence for `verify-this`.
+- Creating before/after evidence for a project verification skill (`/pstack:create-verification-skill`).
 
 ## Setup Pattern
 
 1. Start the app locally using the repo's documented dev command.
 2. Discover existing local harnesses: Playwright tests, Cypress specs, Storybook, browser scripts, Electron launch scripts, or snapshot tools.
-3. For a web app, connect to the local URL with the existing browser tooling.
+3. For a web app, connect to the local URL with the existing browser tooling. In Claude Code, a browser MCP the session already has (Claude in Chrome, a Playwright MCP server, or the desktop app's built-in browser) can drive the page when the repo has no harness.
 4. For Electron/Chromium, enable a remote debugging port when supported.
 5. Select the correct page by stable app markers, not by tab order alone.
 6. Prefer accessibility roles, labels, and stable `data-*` selectors over coordinates.

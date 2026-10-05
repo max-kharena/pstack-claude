@@ -1,0 +1,17 @@
+{
+	"$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+	"name": "pstack-claude",
+	"owner": {
+		"name": "Max Kharena"
+	},
+	"metadata": {
+		"description": "pstack, poteto's agent stack from cursor/plugins, ported to Claude Code."
+	},
+	"plugins": [
+		{
+			"name": "pstack",
+			"source": "./",
+			"description": "if you want to go fast, go deep first. Rigorous agent workflows, principles, and multi-model review for Claude Code."
+		}
+	]
+}
