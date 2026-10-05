@@ -1,6 +1,6 @@
 # Porting pstack from Cursor to Claude Code
 
-This file records how upstream pstack ([cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack), commit `00b52d9`, pstack 0.15.11) maps onto Claude Code, why each judgment call went the way it did, and what was verified. `.upstream/SOURCE` holds the exact upstream commit the port tracks.
+This file records how upstream pstack ([cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack), commit `2cbf585`, pstack 0.15.13) maps onto Claude Code, why each judgment call went the way it did, and what was verified. `.upstream/SOURCE` holds the exact upstream commit the port tracks.
 
 ## Why a separate repository
 

@@ -1,3 +1,3 @@
 repo=https://github.com/cursor/plugins
-sha=00b52d954a99ff67802cad428ff19218659f76fd
+sha=2cbf58508f40de470d7490b55c51d71241928fa2
 paths=pstack, cursor-team-kit per scripts/vendor.list
