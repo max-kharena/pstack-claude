@@ -49,7 +49,7 @@ RULES = [
 DROP_SKILL_KEYS = {"mode", "icon", "color", "reminder"}
 RENAME_NAMES = {"Poteto Mode": "poteto-mode", "Make Bot UI": "make-bot-ui", "Comment Sicko": "comment-sicko"}
 
-VENDORED = ["deslop", "control-ui", "control-cli"]
+VENDOR_LIST = ROOT / "scripts" / "vendor.list"
 
 
 def iter_files():
@@ -80,22 +80,28 @@ def fix_frontmatter(text, is_agent):
     return "---\n" + "\n".join(out) + "\n---\n" + text[m.end():]
 
 
+def vendored_paths():
+    lines = VENDOR_LIST.read_text().splitlines()
+    return [l.strip() for l in lines if l.strip() and not l.lstrip().startswith("#")]
+
+
 def place_vendored(check):
-    """Move cursor-team-kit skills pstack depends on into skills/.
+    """Move the cursor-team-kit components listed in scripts/vendor.list into place.
 
     A move, not a copy: git rename detection then carries later upstream
-    edits to vendor/... into skills/... during a sync merge.
+    edits to vendor/... into skills/... and agents/... during a sync merge.
     """
     changed = []
-    for name in VENDORED:
-        src = ROOT / "vendor/cursor-team-kit/skills" / name
-        dst = ROOT / "skills" / name
+    for rel in vendored_paths():
+        src = ROOT / "vendor/cursor-team-kit" / rel
+        dst = ROOT / rel
         if not src.exists():
             continue
         if dst.exists():
-            sys.exit(f"both {src.relative_to(ROOT)} and skills/{name} exist; merge by hand, then delete the vendor copy")
-        changed.append(f"skills/{name} (moved from vendor)")
+            sys.exit(f"both {src.relative_to(ROOT)} and {rel} exist; merge by hand, then delete the vendor copy")
+        changed.append(f"{rel} (moved from vendor)")
         if not check:
+            dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(str(src), str(dst))
     return changed
 

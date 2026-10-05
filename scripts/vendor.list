@@ -1,0 +1,13 @@
+# cursor-team-kit components this port vendors. sync-upstream.sh copies each
+# into vendor/cursor-team-kit/ on the upstream branch; port.py moves it into
+# place on main. One path per line, relative to cursor-team-kit/.
+skills/deslop
+skills/control-ui
+skills/control-cli
+skills/fix-ci
+skills/fix-merge-conflicts
+skills/get-pr-comments
+skills/make-pr-easy-to-review
+skills/thermo-nuclear-code-quality-review
+skills/what-did-i-get-done
+agents/thermo-nuclear-code-quality-review.md
