@@ -83,7 +83,12 @@ The default answer is `/poteto-mode`, which runs most of the others when its ste
 | Turn what a finished task taught into skill edits | [`/reflect`](../reflect/SKILL.md) |
 | Stop agents from repeating the same mistakes in this repo | [`/correct`](../correct/SKILL.md) |
 | Build a page whose buttons wake a Claude Code routine over its API trigger | [`/make-bot-ui`](../make-bot-ui/SKILL.md) |
+| Drive one PR or a stack to merge-ready without starting `/poteto-mode` | [`/babysit`](../babysit/SKILL.md) |
 | Remove AI slop from the branch's code before commit | [`/deslop`](../deslop/SKILL.md) |
+| Fix failing PR checks, resolve merge conflicts, or summarize review comments | [`/fix-ci`](../fix-ci/SKILL.md), [`/fix-merge-conflicts`](../fix-merge-conflicts/SKILL.md), [`/get-pr-comments`](../get-pr-comments/SKILL.md) |
+| Tidy a PR's history and description so it's easy to review | [`/make-pr-easy-to-review`](../make-pr-easy-to-review/SKILL.md) |
+| Get an extremely strict maintainability review of the branch | [`/thermo-nuclear-code-quality-review`](../thermo-nuclear-code-quality-review/SKILL.md) |
+| Summarize their own commits over a time range | [`/what-did-i-get-done`](../what-did-i-get-done/SKILL.md) |
 | Drive a CLI, TUI, browser, or Electron app to prove behavior | [`/control-cli`](../control-cli/SKILL.md), [`/control-ui`](../control-ui/SKILL.md) |
 | Find their way around pstack | `/poteto-help` |
 
@@ -101,7 +106,8 @@ Close calls:
 Not in pstack:
 
 - `/loop` is a Claude Code built-in. `skill-creator` ships in Anthropic's skills plugin.
-- `/deslop`, `control-cli`, and `control-ui` come from Cursor's team kit upstream. This port bundles them.
+- `/deslop`, `control-cli`, `control-ui`, `/fix-ci`, `/fix-merge-conflicts`, `/get-pr-comments`, `/make-pr-easy-to-review`, `/thermo-nuclear-code-quality-review`, and `/what-did-i-get-done` come from Cursor's team kit upstream. This port bundles them.
+- Cursor, where upstream runs, has a built-in `/babysit`. Claude Code has none, so this port adds `/babysit`, which runs the Babysit playbook.
 - pstack has no `/orchestrate` skill. Orchestrate is a `/poteto-mode` playbook. If the slash menu shows `/orchestrate`, another plugin provides it.
 
 ## Playbooks and principles
@@ -115,7 +121,7 @@ Playbooks are step lists inside `/poteto-mode`, not skills, so they have no slas
 - "full autopilot on this queue" runs Autopilot-full. "stack them, don't ship" runs Autopilot-stack.
 - "run the eval playbook" runs Eval.
 
-Without `/poteto-mode`, a phrase such as "babysit this pr" can start another installed skill for the same job instead. The Playbooks section of [`poteto-mode`](../poteto-mode/SKILL.md) lists every playbook and when it applies. [Guide page 6](../../docs/guide/06-verify-and-ship.md) covers opening, babysitting, and landing a PR.
+Without `/poteto-mode`, a phrase such as "babysit this pr" starts `/pstack:babysit`, which runs the same Babysit playbook. The Playbooks section of [`poteto-mode`](../poteto-mode/SKILL.md) lists every playbook and when it applies. [Guide page 6](../../docs/guide/06-verify-and-ship.md) covers opening, babysitting, and landing a PR.
 
 pstack has no planning skill. Claude Code's plan mode works alongside it. For work that spans phases or stacked PRs, asking `/poteto-mode` for a plan runs the [Multi-phase plan playbook](../poteto-mode/playbooks/multi-phase-plan.md), which writes the plan and doesn't implement it. For a design question, the Prototype playbook or `/architect` settles it in code first.
 

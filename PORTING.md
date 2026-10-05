@@ -14,9 +14,9 @@ A Claude Code plugin installs from a marketplace, and a marketplace is a git rep
 
 | Upstream | Count | Port |
 |---|---|---|
-| Skills | 51 | All 51, plus `deslop`, `control-cli`, `control-ui` vendored from cursor-team-kit because pstack routes to them. 54 total. |
+| Skills | 51 | All 51, plus nine from cursor-team-kit (`deslop`, `control-cli`, `control-ui`, which pstack routes to, and `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, `make-pr-easy-to-review`, `thermo-nuclear-code-quality-review`, `what-did-i-get-done`), plus `babysit`, written for this port. 61 total. |
 | Playbooks under `poteto-mode` | 23 | All 23. |
-| Subagents | 2 | `poteto-agent`, `comment-sicko`, plus a new `reader` (see below). |
+| Subagents | 2 | `poteto-agent`, `comment-sicko`, the vendored `thermo-nuclear-code-quality-review`, plus a new `reader` (see below). |
 | Scripts | `watch-pr`, `orch`, `check-plan.mjs`, `worktree-audit.sh`, `log.sh` | All. Only `worktree-audit.sh` changed in behavior. |
 | Guide | 10 pages, 6 images | All, with install and mode sections rewritten. |
 | benny automation pack | 3 operational skills, templates | All, re-targeted at Claude Code routines. |
@@ -51,8 +51,9 @@ A Claude Code plugin installs from a marketplace, and a marketplace is a git rep
 | Custom Mode (Option+Enter) with `reminder` | `/output-style pstack:poteto`, or `claude --agent pstack:poteto-agent` | output-styles/poteto.md, README, guide, poteto-help |
 | Cursor `/loop` | Claude Code `/loop` | unchanged |
 | Cursor `create-skill` | Anthropic's `skill-creator` skill, else the Authoring a skill playbook plus `claude plugin validate --strict` | reflect, automate-me, authoring-a-skill, poteto-mode |
-| Cursor built-in babysit | any other installed PR-watching skill | babysit, poteto-mode |
-| cursor-team-kit `deslop`, `control-cli`, `control-ui` | vendored into `skills/` | poteto-mode, playbooks |
+| Cursor built-in `/babysit` | `/pstack:babysit`, a thin skill that runs the Babysit playbook outside poteto-mode | skills/babysit, poteto-mode, poteto-help |
+| cursor-team-kit skills and agent | vendored into `skills/` and `agents/`, listed in `scripts/vendor.list` | poteto-mode, playbooks, babysit |
+| thermo-nuclear agent's `shell` and `explore` subagents | the parent gathers the diff with Bash and the files with Read | agents/thermo-nuclear-code-quality-review.md |
 | Cursor agent store (path in the system prompt) | `~/.claude/pstack/orchestrate/<slug>/` exported as `ORCH_STORE` | orchestrate |
 | Cursor dashboard for cloud agents | `claude.ai/code` sessions | orchestrate |
 | Grok Bot routine, `update_state`, `SendToUser` secret card, `api2.cursor.sh` webhook | Claude Code routine API trigger (`/fire`, bearer token, `<routine-fire-payload>`), token written by the user with `read -s` | make-bot-ui |
@@ -75,6 +76,8 @@ A Claude Code plugin installs from a marketplace, and a marketplace is a git rep
 
 **benny.** Routines have no Slack trigger. An hourly poll that skips threads already carrying a Benny marker needs no infrastructure and is safe to rerun. The API trigger is documented for teams that already run a Slack relay. Routines document only skills committed to the cloned repository, so setup proves the plugin loads in the cloud with **Run now** and falls back to committing the shared skills.
 
+**`/babysit`.** Cursor has a built-in `/babysit` that poteto-mode tells agents not to use. Claude Code has none, so a user outside poteto-mode had no entry point for PR babysitting. The port adds a thin `babysit` skill that runs the upstream Babysit playbook, so upstream edits to the playbook reach it on the next sync. It is model-invocable like Cursor's built-in, falls back to `gh` when Bun is missing, and points at the vendored `fix-ci` and `get-pr-comments` helpers. It keeps the playbook's rule that a conflict is reported, not resolved.
+
 **Kept as upstream.** Origin support (it is gated on `command -v origin`), the watch-pr script's Cursor Bugbot detection (other review bots are treated as human reviewers, which is the conservative side), and the poteto voice in every skill.
 
 **Fixed while porting.** `worktree-audit.sh` now finds Claude Code transcripts, including the separate project folder each worktree session gets, and falls back to `grep` when `rg` is only a shell function (in that case upstream silently reported no chats). The multi-phase plan's `check-plan.mjs` path was relative to the cursor/plugins repository root and broke once installed. It now resolves from the skill folder.
@@ -82,7 +85,7 @@ A Claude Code plugin installs from a marketplace, and a marketplace is a git rep
 ## Not ported
 
 - **dyl-stack**, upstream's layer over pstack. It can be ported as its own plugin that declares `"dependencies": ["pstack@pstack-claude"]`.
-- The rest of cursor-team-kit. pstack routes only to the three vendored skills.
+- The rest of cursor-team-kit (`check-compiler-errors`, `loop-on-ci`, `new-branch-and-pr`, `pr-review-canvas`, `review-and-ship`, `run-smoke-tests`, `verify-this`, `weekly-review`, `workflow-from-chats`, and the `ci-watcher` agent). Add a path to `scripts/vendor.list` and run `scripts/sync-upstream.sh --force <pinned sha>` to vendor one.
 
 ## Verification
 

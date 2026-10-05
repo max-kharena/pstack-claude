@@ -30,7 +30,8 @@ Upstream pstack is a Cursor plugin. This repository repackages it as a Claude Co
 | Skills mine Cursor chat transcripts | Skills read Claude Code transcripts in `~/.claude/projects/` |
 | Cloud agents | Agent tool isolation: `remote` where available, otherwise `worktree` |
 | benny and make-bot-ui run on Cursor automations | They run on Claude Code routines |
-| `deslop`, `control-ui`, and `control-cli` come from cursor-team-kit | They are bundled in this plugin |
+| `deslop`, `control-ui`, `control-cli`, and six PR and review helpers come from cursor-team-kit | They are bundled in this plugin |
+| Cursor has a built-in `/babysit` | `/pstack:babysit` runs pstack's Babysit playbook |
 
 [`PORTING.md`](./PORTING.md) has the full map, every judgment call, and what was tested. The port tracks upstream through an `upstream` branch, so new pstack releases can be merged in (see [staying in sync with upstream](#staying-in-sync-with-upstream)).
 
@@ -153,6 +154,13 @@ Use `/pstack:poteto-mode` at the start of a task. It reads your request, picks a
 | [`/deslop`](./skills/deslop/SKILL.md) | strip AI slop from the branch's code before commit. vendored from cursor-team-kit. |
 | [`/control-cli`](./skills/control-cli/SKILL.md) | drive and profile a CLI or TUI through a local harness. vendored from cursor-team-kit. |
 | [`/control-ui`](./skills/control-ui/SKILL.md) | drive a web, IDE, or Electron UI through a browser or CDP harness. vendored from cursor-team-kit. |
+| [`/babysit`](./skills/babysit/SKILL.md) | you want an open PR or stack driven to merge-ready without starting poteto-mode. runs the Babysit playbook and never merges. added by this port. |
+| [`/fix-ci`](./skills/fix-ci/SKILL.md) | a PR's checks are failing and you want the smallest fixes, one failure at a time. vendored from cursor-team-kit. |
+| [`/fix-merge-conflicts`](./skills/fix-merge-conflicts/SKILL.md) | a branch has merge conflicts and you want them resolved and the build checked. vendored from cursor-team-kit. |
+| [`/get-pr-comments`](./skills/get-pr-comments/SKILL.md) | you want the active PR's review comments grouped into an action list. vendored from cursor-team-kit. |
+| [`/make-pr-easy-to-review`](./skills/make-pr-easy-to-review/SKILL.md) | you want a PR's history and description cleaned up for reviewers without changing behavior. vendored from cursor-team-kit. |
+| [`/thermo-nuclear-code-quality-review`](./skills/thermo-nuclear-code-quality-review/SKILL.md) | you want an extremely strict maintainability review of the branch. vendored from cursor-team-kit. |
+| [`/what-did-i-get-done`](./skills/what-did-i-get-done/SKILL.md) | you want your own commits over a time range summarized as a status update. vendored from cursor-team-kit. |
 
 </details>
 
@@ -204,6 +212,7 @@ help:              /poteto-help which skill should i use to review this branch?
 |---|---|---|
 | [`poteto-agent`](./agents/poteto-agent.md) | `subagent_type: "pstack:poteto-agent"` | Runs poteto's style end to end. Reads `poteto-mode` in full before any work. Also works as a session agent with `claude --agent`. |
 | [`comment-sicko`](./agents/comment-sicko.md) | `subagent_type: "pstack:comment-sicko"` | Read-and-delete comment reviewer. Usually invoked through `/pstack:no-comments`. |
+| [`thermo-nuclear-code-quality-review`](./agents/thermo-nuclear-code-quality-review.md) | `subagent_type: "pstack:thermo-nuclear-code-quality-review"` | Runs the thermo-nuclear rubric in its own context over a diff the parent gathered. Vendored from cursor-team-kit. |
 | [`reader`](./agents/reader.md) | `subagent_type: "pstack:reader"` | Read-only worker for explorers, investigators, reviewers, and judges. It cannot edit files but keeps MCP tools. It replaces upstream's `readonly` spawn flag. |
 
 ## principles
@@ -276,9 +285,9 @@ claude plugin validate --strict .
 ## credits
 
 - **pstack** was created by **Lauren Tan ([poteto](https://x.com/poteto))**, who has worked on large codebases at Meta, Netflix, and Cursor and helps build React Compiler on the React core team. The original lives in [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack). The skills, playbooks, principles, guide, illustrations, and scripts in this repository are poteto's work. Thank you, poteto, for writing it all down and sharing it openly.
-- **`deslop`, `control-cli`, and `control-ui`** come from Cursor's [cursor-team-kit](https://github.com/cursor/plugins/tree/main/cursor-team-kit).
+- **`deslop`, `control-cli`, `control-ui`, `fix-ci`, `fix-merge-conflicts`, `get-pr-comments`, `make-pr-easy-to-review`, `thermo-nuclear-code-quality-review`, and `what-did-i-get-done`**, plus the thermo-nuclear agent, come from Cursor's [cursor-team-kit](https://github.com/cursor/plugins/tree/main/cursor-team-kit).
 - **The Claude Code port** is maintained by Max Kharena. Report problems with the port in this repository's [issues](https://github.com/max-kharena/pstack-claude/issues). Ideas about pstack itself belong [upstream](https://github.com/cursor/plugins).
 
 ## license
 
-MIT, the same as the original. Upstream pstack is copyright Lauren Tan, and the [license](./LICENSE) keeps that notice. The vendored `deslop`, `control-cli`, and `control-ui` skills are copyright Cursor ([license](./vendor/cursor-team-kit/LICENSE)).
+MIT, the same as the original. Upstream pstack is copyright Lauren Tan, and the [license](./LICENSE) keeps that notice. The vendored cursor-team-kit skills and agent are copyright Cursor ([license](./vendor/cursor-team-kit/LICENSE)).

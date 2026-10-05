@@ -48,7 +48,7 @@ done <<<"$rules"
 # "upstream" is deliberate attribution. The watch-pr script keeps its Cursor
 # Bugbot detection on purpose (it still matches Bugbot comments).
 out=$(git ls-files -co --exclude-standard | grep -Ev "$allow" | grep -Ev '\.(png|jpg|lock)$' \
-	| grep -v 'scripts/watch-pr/' | xargs grep -nwE 'Cursor' 2>/dev/null | grep -v 'upstream')
+	| grep -v 'scripts/watch-pr/' | xargs grep -nwE 'Cursor' 2>/dev/null | grep -vi 'upstream')
 if [ -n "$out" ]; then
 	printf '\n## bare "Cursor" mention\n'
 	printf '%s\n' "$out" | sed 's/^/   /' | cut -c1-220
