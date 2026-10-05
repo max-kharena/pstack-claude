@@ -1,12 +1,38 @@
 # pstack for Claude Code
 
-A Claude Code port of [pstack](https://github.com/cursor/plugins/tree/main/pstack), the agent stack [poteto](https://x.com/poteto) (Lauren Tan) uses to ship at Cursor. Upstream is a Cursor plugin. This repository is a Claude Code plugin and a one-plugin marketplace, so you install it with `/plugin`.
+> **An unofficial Claude Code port of [pstack](https://github.com/cursor/plugins/tree/main/pstack), created by Lauren Tan ([poteto](https://x.com/poteto)).**
+> All credit for pstack's ideas, skills, playbooks, principles, and guide goes to poteto. This repository only adapts them to run in Claude Code. It is not affiliated with or endorsed by poteto or Cursor. If you use Cursor, install the original from [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack) instead.
 
-> if you want to go fast, go deep first. pstack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence.
->
-> poteto, in the [upstream README](https://github.com/cursor/plugins/blob/main/pstack/README.md)
+## What pstack is
 
-The skills, playbooks, and principles are poteto's. The port changes only what Claude Code does differently: tool names, subagent types, model routing, transcript paths, cloud agents, and modes. [`PORTING.md`](./PORTING.md) lists every mapping and every judgment call.
+pstack is how poteto works with coding agents, written down as skills. Its motto is "if you want to go fast, go deep first." The goal is not more lines of code. It is less code of higher quality, produced by an agent that works the way a careful senior engineer does.
+
+That means the agent understands the code before it changes it, settles the design before it writes the implementation, proves the change on the real app instead of trusting a green build, and cleans up its code and prose before review. When every agent works that rigorously, you can run several in parallel and trust what comes back.
+
+In practice pstack gives you:
+
+- **One entry point.** `/poteto-mode` matches your task to one of 23 playbooks (bug fix, feature, perf, refactor, prototype, shipping, overnight runs, and more), copies its steps into the task list, and runs them.
+- **24 principles.** Each is a short skill, such as *prove it works* or *fix root causes*. The agent reads a principle when it applies one and names it in its reply.
+- **Workflow skills.** `/how` and `/why` to understand code, `/architect`, `/arena`, and `/swarm` to design and fan out work, `/interrogate` for multi-model review, `/tdd`, `/unslop`, `/no-comments`, and more.
+
+For poteto's own explanation, read the [original README](https://github.com/cursor/plugins/blob/main/pstack/README.md) and the [pstack guide](./docs/guide/README.md).
+
+## About this port
+
+Upstream pstack is a Cursor plugin. This repository repackages it as a Claude Code plugin and a one-plugin marketplace. The skills, playbooks, and principles keep poteto's wording. The port changes only what works differently in Claude Code:
+
+| In the Cursor original | In this port |
+|---|---|
+| Subagents run on Claude, GPT, and Grok models, one per role | Claude models per role: Opus for judgment, Sonnet for code, Fable as a fast third reviewer. An external CLI such as `codex` can add a non-Claude reviewer |
+| Model choices live in a Cursor rule | `~/.claude/rules/pstack-models.md`, written by `/pstack:setup-pstack` |
+| Read-only subagents lose their MCP tools | The `pstack:reader` agent is read-only and keeps MCP tools |
+| A Custom Mode keeps poteto-mode on | The `pstack:poteto` output style, or `claude --agent pstack:poteto-agent` |
+| Skills mine Cursor chat transcripts | Skills read Claude Code transcripts in `~/.claude/projects/` |
+| Cloud agents | Agent tool isolation: `remote` where available, otherwise `worktree` |
+| benny and make-bot-ui run on Cursor automations | They run on Claude Code routines |
+| `deslop`, `control-ui`, and `control-cli` come from cursor-team-kit | They are bundled in this plugin |
+
+[`PORTING.md`](./PORTING.md) has the full map, every judgment call, and what was tested. The port tracks upstream through an `upstream` branch, so new pstack releases can be merged in (see [staying in sync with upstream](#staying-in-sync-with-upstream)).
 
 ## install
 
@@ -247,6 +273,12 @@ python3 scripts/check-refs.py
 claude plugin validate --strict .
 ```
 
+## credits
+
+- **pstack** was created by **Lauren Tan ([poteto](https://x.com/poteto))**, who has worked on large codebases at Meta, Netflix, and Cursor and helps build React Compiler on the React core team. The original lives in [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack). The skills, playbooks, principles, guide, illustrations, and scripts in this repository are poteto's work. Thank you, poteto, for writing it all down and sharing it openly.
+- **`deslop`, `control-cli`, and `control-ui`** come from Cursor's [cursor-team-kit](https://github.com/cursor/plugins/tree/main/cursor-team-kit).
+- **The Claude Code port** is maintained by Max Kharena. Report problems with the port in this repository's [issues](https://github.com/max-kharena/pstack-claude/issues). Ideas about pstack itself belong [upstream](https://github.com/cursor/plugins).
+
 ## license
 
-MIT. Upstream pstack is copyright Lauren Tan. The vendored `deslop`, `control-cli`, and `control-ui` skills are copyright Cursor ([license](./vendor/cursor-team-kit/LICENSE)).
+MIT, the same as the original. Upstream pstack is copyright Lauren Tan, and the [license](./LICENSE) keeps that notice. The vendored `deslop`, `control-cli`, and `control-ui` skills are copyright Cursor ([license](./vendor/cursor-team-kit/LICENSE)).
